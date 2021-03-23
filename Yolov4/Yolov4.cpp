@@ -98,7 +98,7 @@ void smooth(int target_dx, int target_dy, int * x_out, int * y_out, float speedM
     *x_out = x;
     *y_out = y;
 }
-Arduino ard(L"COM5");
+Arduino ard;
 struct TargetInfo
 {
     int dx;
@@ -197,6 +197,10 @@ void KeyListener() {
 }
 int main()
 {
+    std::string port;
+    std::cout << "Enter comport:";
+    std::cin >> port;
+    ard.Init(s2ws(port));
     std::vector<std::string> class_names;
     {
         std::ifstream class_file("classes.txt");
