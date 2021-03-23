@@ -21,6 +21,7 @@ namespace Settings
 	extern int NUM_CLASSES;
 	extern float speed;
 	extern float flickSpeed;
+	extern float flickDistanceFactor;
 
 	extern float horizontal_offset;          // Fractional offset(between 0 and 1) from left side of the detection.
 	extern float vertical_offset;            // Fractional offset(between 0 and 1) from top top side of the detection.
@@ -28,6 +29,7 @@ namespace Settings
 	extern int input_dimensions[];
 	extern bool degub;
 	extern Mode mode;
+	extern int aimKey;
 }
 
 static std::wstring s2ws(const std::string& str)

@@ -35,6 +35,7 @@ namespace Settings
     int NUM_CLASSES = 1;
     float speed = 6.4;
     float flickSpeed = 1000;
+    float flickDistanceFactor = 2;
 
     float horizontal_offset = 0.5;          // Fractional offset(between 0 and 1) from left side of the detection.
     float vertical_offset = 0.1;            // Fractional offset(between 0 and 1) from top top side of the detection.
@@ -42,6 +43,7 @@ namespace Settings
     int input_dimensions[] = { 500, 600 };
     bool degub = false;
     Mode mode = Mode::Track;
+    int aimKey = VK_MBUTTON;
 }
 
 // colors for bounding boxes
@@ -110,8 +112,8 @@ void flick(TargetInfo * info) {
     double rounding_error_x = 0.0;
     double rounding_error_y = 0.0;
 
-    double mouse_x = (double)info->dx * 1.95;
-    double mouse_y = (double)info->dy * 1.95;
+    double mouse_x = (double)info->dx * Settings::flickDistanceFactor;
+    double mouse_y = (double)info->dy * Settings::flickDistanceFactor;
 
     double flick_distance = sqrt(mouse_x * mouse_x + mouse_y * mouse_y);
     double flick_time = flick_distance / Settings::flickSpeed;
@@ -221,10 +223,10 @@ int main()
     auto output_names = net.getUnconnectedOutLayersNames();
 
     cv::Mat blob, outMat;
-    outMat.create(Settings::input_dimensions[0], Settings::input_dimensions[1], CV_8UC3);
     BYTE* test;
     std::vector<cv::Mat> detections;
 
+    outMat.create(Settings::input_dimensions[0], Settings::input_dimensions[1], CV_8UC3);
 
     std::thread captureScreen(Screenshot, &outMat);
 
@@ -302,7 +304,7 @@ int main()
             }
         }
         if (Settings::mode == Mode::Track) {
-            if (GetAsyncKeyState(VK_MBUTTON)) {
+            if (GetAsyncKeyState(Settings::aimKey)) {
                 int x;
                 int y;
                 smooth(roundto127(target_dx), roundto127(target_dy), &x, &y, speedMultiplier);
@@ -310,12 +312,12 @@ int main()
             }
         }
         else if (Settings::mode == Mode::Flick) {
-            if (GetAsyncKeyState(VK_MBUTTON) && (target_dx != 0 || target_dy != 0)) {
+            if (GetAsyncKeyState(Settings::aimKey) && (target_dx != 0 || target_dy != 0)) {
                 TargetInfo info;
                 info.dx = target_dx;
                 info.dy = target_dy;
                 flick(&info);
-                while (GetAsyncKeyState(VK_MBUTTON))
+                while (GetAsyncKeyState(Settings::aimKey))
                 {
                     Sleep(1);
                 }

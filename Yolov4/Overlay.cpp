@@ -153,14 +153,23 @@ void DrawMenu()
 
 	ImGui::Spacing();
 
+
+	if (ImGui::Button(_xor_("Bind##1").c_str()))
+		winKey::saveHotKey(&Settings::aimKey);
+	ImGui::SameLine();
+	std::string aimKeyText = _xor_("Aimhelper Hotkey = ").c_str() + winKey::keyTextForInt(Settings::aimKey);
+	ImGui::Text(aimKeyText.c_str());
+	const char* const Modes[] = {"Track", "Flick"};
+	ImGui::Combo(_xor_("Aim Mode").c_str(), (int*)&Settings::mode, Modes, 2);
 	ImGui::SliderFloat(_xor_("Confidence").c_str(), &Settings::CONFIDENCE_THRESHOLD, 0, 1);
 	ImGui::SliderFloat(_xor_("NMS threshold").c_str(), &Settings::NMS_THRESHOLD, 0, 1);
-	ImGui::SliderFloat(_xor_("Speed").c_str(), &Settings::speed, 0, 15);
-	ImGui::SliderFloat(_xor_("Flick speed").c_str(), &Settings::flickSpeed, 0, 5000);
+	ImGui::SliderFloat(_xor_("Speed").c_str(), &Settings::speed, 0.1, 30);
+	ImGui::SliderFloat(_xor_("Flick speed").c_str(), &Settings::flickSpeed, 100, 1000);
+	ImGui::SliderFloat(_xor_("Flick Distance (adjust for ur sens)").c_str(), &Settings::flickDistanceFactor, 1, 5);
 	ImGui::SliderFloat(_xor_("Horizontal offset").c_str(), &Settings::horizontal_offset, 0, 1);
-	ImGui::SliderFloat(_xor_("Vertical offset").c_str(), &Settings::vertical_offset, 0, 1);
+	ImGui::SliderFloat(_xor_("Vertical offset").c_str(), &Settings::vertical_offset, 0, 1);/*
 	ImGui::SliderInt(_xor_("Fov X").c_str(), &(Settings::input_dimensions[0]), 0, Settings::screen_dimensions[0]);
-	ImGui::SliderInt(_xor_("Fov Y").c_str(), &(Settings::input_dimensions[1]), 0, Settings::screen_dimensions[1]);
+	ImGui::SliderInt(_xor_("Fov Y").c_str(), &(Settings::input_dimensions[1]), 0, Settings::screen_dimensions[1]);*/
 	ImGui::Checkbox(_xor_("Degub window").c_str(), &Settings::degub);
 
 	if (ImGui::Checkbox(_xor_("Stream Proof").c_str(), &streamProof))
