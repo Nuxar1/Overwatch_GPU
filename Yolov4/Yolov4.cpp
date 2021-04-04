@@ -254,11 +254,11 @@ int main()
         std::vector<cv::Rect> boxes;
         std::vector<float> scores;
 
-        for (auto& output : detections)
+#pragma omp parallel for
+        for (int i = 0; i < detections.size(); i++)
         {
-            m_Futures.push_back(std::async(std::launch::async, GetDetections, &output, &outMat, &scores, &boxes));
+            GetDetections(&detections[i], &outMat, &scores, &boxes);
         }
-        m_Futures.clear();
 
         /*if (boxes.size() <= 0 || scores.size() <= 0)
             continue;*/
